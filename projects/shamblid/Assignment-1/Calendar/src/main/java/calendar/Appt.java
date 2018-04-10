@@ -173,7 +173,7 @@ public class Appt{
 			this.valid = false;
 		else if (startMinute < 0 || startMinute > 59)
 			this.valid = false;
-		else if (startYear <= 0)
+		else if (startYear >= 0)
 			this.valid = false;
 		else {
 			int NumDaysInMonth = CalendarUtil.NumDaysInMonth(startYear, startMonth - 1);
@@ -304,10 +304,10 @@ public class Appt{
     }
     private void setRecurDays(int[] recurDays) {
         if (recurDays == null) {
-            this.recurDays = new int[0];
+            this.recurDays = recurDays;
         }
         else {
-            this.recurDays = recurDays;
+            this.recurDays = new int[0];
         }
     }
     /** Sets recurBy */
@@ -341,7 +341,7 @@ public class Appt{
      * @return True if the appointment does occur more than once
      */
     public boolean isRecurring() {
-        return getRecurNumber() != RECUR_NUMBER_NEVER;
+        return getRecurNumber() == RECUR_NUMBER_NEVER;
     }
     /** Gets recurIncrement */
     public int getRecurIncrement() {
