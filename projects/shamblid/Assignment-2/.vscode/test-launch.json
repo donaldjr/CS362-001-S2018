@@ -1,0 +1,22 @@
+{
+    "run": [
+        {
+            "name": "Calendar",
+            "projectName": "Calendar",
+            "workingDirectory": "/home/dj/shamblid/spring2018/cs362/CS362-001-S2018/projects/shamblid/Assignment-2",
+            "args": [],
+            "vmargs": [],
+            "preLaunchTask": ""
+        }
+    ],
+    "debug": [
+        {
+            "name": "Calendar",
+            "projectName": "Calendar",
+            "workingDirectory": "/home/dj/shamblid/spring2018/cs362/CS362-001-S2018/projects/shamblid/Assignment-2",
+            "args": [],
+            "vmargs": [],
+            "preLaunchTask": ""
+        }
+    ]
+}
