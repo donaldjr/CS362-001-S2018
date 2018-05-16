@@ -22,7 +22,7 @@ public class DataHandlerRandomTest {
      * Return a randomly selected method to be tests !.
      */
     public static String RandomSelectMethod(Random random) {
-        String[] methodArray = new String[] { "deleteAppt", "getApptRange", "setRecurrence" };// The list of the of methods to
+        String[] methodArray = new String[] { "deleteAppt", "getApptRange" };// The list of the of methods to
                                                                                         // be tested in the Appt class
         int n = random.nextInt(methodArray.length);// get a random number between 0 (inclusive) and methodArray.length
                                                    // (exclusive)
@@ -89,6 +89,12 @@ public class DataHandlerRandomTest {
                 String description = "This is my birthday party.";
                 String emailAddress = "xyz@gmail.com";
 
+                int sizeArray = ValuesGenerator.getRandomIntBetween(random, 0, 8);
+                int[] recurDays = ValuesGenerator.generateRandomArray(random, sizeArray);
+                int recur = DataHandlerRandomTest.RandomSelectRecur(random);
+                int recurIncrement = ValuesGenerator.RandInt(random);
+                int recurNumber = DataHandlerRandomTest.RandomSelectRecurForEverNever(random);
+
                 int startHour1 = ValuesGenerator.getRandomIntBetween(random, 1, 11);
                 int startMinute1 = ValuesGenerator.getRandomIntBetween(random, 1, 11);
                 int startDay1 = ValuesGenerator.getRandomIntBetween(random, 1, 11);
@@ -109,6 +115,8 @@ public class DataHandlerRandomTest {
                 // Construct a new Appointment object with the initial data
                 Appt appt = new Appt(startHour, startMinute, startDay, startMonth, startYear, title, description,
                         emailAddress);
+                
+                appt.setRecurrence(recurDays, recur, recurIncrement, recurNumber);
                 dh.saveAppt(appt);
 
                 if (!firstDay.before(lastDay))
@@ -121,14 +129,8 @@ public class DataHandlerRandomTest {
                             dh.deleteAppt(appt);
                         else
                             dh1.deleteAppt(appt);
-                    } else if (methodName.equals("setRecurrence")) {
-                        int sizeArray = ValuesGenerator.getRandomIntBetween(random, 0, 8);
-                        int[] recurDays = ValuesGenerator.generateRandomArray(random, sizeArray);
-                        int recur = ApptRandomTest.RandomSelectRecur(random);
-                        int recurIncrement = ValuesGenerator.RandInt(random);
-                        int recurNumber = ApptRandomTest.RandomSelectRecurForEverNever(random);
-                        appt.setRecurrence(recurDays, recur, recurIncrement, recurNumber);
-                    } else if (methodName.equals("getApptRange")){
+                    }        
+                    else if (methodName.equals("getApptRange")){
 
                         if( i % 2 == 0)
                             dh.getApptRange(firstDay, lastDay);

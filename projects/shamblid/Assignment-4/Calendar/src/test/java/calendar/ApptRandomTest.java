@@ -136,7 +136,7 @@ public class ApptRandomTest {
 				int startMinute = ValuesGenerator.getRandomIntBetween(random, -1, 100);
 				int startDay = ValuesGenerator.getRandomIntBetween(random, -1, 100);
 				int startMonth = ValuesGenerator.getRandomIntBetween(random, -1, 100);
-				int startYear = ValuesGenerator.getRandomIntBetween(random, -1, 2018);
+				int startYear = ValuesGenerator.getRandomIntBetween(random, -1000, 2018);
 				String title = "Birthday Party";
 				String description = "This is my birthday party.";
 				String emailAddress = "xyz@gmail.com";
