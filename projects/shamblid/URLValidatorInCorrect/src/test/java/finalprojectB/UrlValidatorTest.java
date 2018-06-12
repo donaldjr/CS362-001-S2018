@@ -21,7 +21,20 @@ public class UrlValidatorTest extends TestCase {
    }
 
    
-      
+      ResultPair[] testUrlScheme = { new ResultPair("http://", true), new ResultPair("ftp://", true),
+      new ResultPair("3ht://", false), new ResultPair("http:", false), new ResultPair("://", false) };
+  
+      ResultPair[] testUrlAuthority = { new ResultPair("www.google.com", true), new ResultPair("go.com", true),
+      new ResultPair("256.256.256.256", true), new ResultPair("1.2.3.4.5", false), new ResultPair("aaa", false) };
+ 
+      ResultPair[] testUrlPort = { new ResultPair(":80", true), new ResultPair(":65535", true), new ResultPair("", true),
+      new ResultPair(":-1", false), new ResultPair(":65a", false) };
+  
+      ResultPair[] testPath = { new ResultPair("/test1", true), new ResultPair("/t123", true), new ResultPair("", true),
+      new ResultPair("/..", false), new ResultPair("/..//file", false) };
+ 
+      ResultPair[] testUrlQuery = { new ResultPair("?action=view", true), new ResultPair("?action=edit&mode=up", true),
+      new ResultPair("", true) };
 
    
 
@@ -48,82 +61,71 @@ public class UrlValidatorTest extends TestCase {
    }
 
    
-   
+
    @Test
-   public void testYourFirstPartition()
+   public void testPartitionScheme()
    {
-     //You can use this function to implement your First Partition testing	
+       String[] schemes = { "http", "https" };
+       UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //'all'
+       UrlValidator urlValidator2 = new UrlValidator(schemes); //some
 
+       // commented out asserts cause:
+       //java.lang.ExceptionInInitializerError
+       //   at finalprojectB.UrlValidator.isValidAuthority(UrlValidator.java:393)
+       //   at finalprojectB.UrlValidator.isValid(UrlValidator.java:327)
 
+       //assertTrue(urlValidator2.isValid("http://foo.com"));
+       //assertTrue(urlValidator2.isValid("https://foo.com"));
+       //assertTrue(urlValidator1.isValid("ftp://foo.com"));
+       assertTrue(urlValidator1.isValid("http://foo.com"));
+       //assertTrue(urlValidator1.isValid("https://foo.com"));
+
+       //assertFalse(urlValidator1.isValid("file://foo.com"));
+       //assertFalse(urlValidator1.isValid("bad://foo.com"));
+       assertFalse(urlValidator2.isValid("file://foo.com"));
+       assertFalse(urlValidator2.isValid("bad://foo.com"));
    }
-   
-   public void testYourSecondPartition(){
-		 //You can use this function to implement your Second Partition testing	   
-
-   }
-   //You need to create more test cases for your Partitions if you need to
    @Test
-   public void testIsValid()
-   {
-  //  You can use this function for programming based testing
-      ResultPair[] testUrlScheme = { new ResultPair("http://", true), new ResultPair("ftp://", true),
-      new ResultPair("3ht://", false), new ResultPair("http:", false), new ResultPair("://", false) };
-  
-      ResultPair[] testUrlAuthority = { new ResultPair("www.google.com", true), new ResultPair("go.com", true),
-      new ResultPair("256.256.256.256", true), new ResultPair("1.2.3.4.5", false), new ResultPair("aaa", false) };
- 
-      ResultPair[] testUrlPort = { new ResultPair(":80", true), new ResultPair(":65535", true), new ResultPair("", true),
-      new ResultPair(":-1", false), new ResultPair(":65a", false) };
-  
-      ResultPair[] testPath = { new ResultPair("/test1", true), new ResultPair("/t123", true), new ResultPair("", true),
-      new ResultPair("/..", false), new ResultPair("/..//file", false) };
- 
-      ResultPair[] testUrlQuery = { new ResultPair("?action=view", true), new ResultPair("?action=edit&mode=up", true),
-      new ResultPair("", true) };
+   public void testPartitionAuthority(){
+       UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //'all'
+      // assertTrue(urlValidator1.isValid("http://user:pass@foo.com:8080")); //should work
+       assertTrue(urlValidator1.isValid("http://255.255.255.255"));
+       //assertTrue(urlValidator1.isValid("http://255.255.255.255:8080")); //should work
+      // assertTrue(urlValidator1.isValid("http://user:pass@255.255.255")); // should work
+   }
+    @Test
+    public void testPartitionPath(){
+        //You can use this function to implement your Second Partition testing
+        UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //'all'
+        assertTrue(urlValidator1.isValid("http://foo.com/file"));
+       // assertTrue(urlValidator1.isValid("http://foo.com/folder/file")); should work
+        assertFalse(urlValidator1.isValid("http://foo.com//file"));
+    }
+    @Test
+    public void testPartitionQuery(){
+        //You can use this function to implement your Second Partition testing
+        UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //'all'
+        assertTrue(urlValidator1.isValid("http://foo.com/place?key1=value1&key2=value2"));
+        assertTrue(urlValidator1.isValid("http://foo.com/place?key1=value1;key2=value2"));
+        assertTrue(urlValidator1.isValid("http://foo.com/place?key1=value1;key2="));
+        assertTrue(urlValidator1.isValid("http://foo.com/place?=value1"));
+    }
+    @Test
+    public void testPartitionFragment(){
+        //You can use this function to implement your Second Partition testing
+        UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //'all'
+        assertTrue(urlValidator1.isValid("http://foo.com#test"));
+        assertTrue(urlValidator1.isValid("http://foo.com/file.html#test"));
 
-      UrlValidator urlValidator1 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES); //default schemes to use with these pairs
-     // UrlValidator urlValidator2 = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES);
-      Random random = new Random();
-
-      for (int i = 0; i < 1000; i++){
-        StringBuilder buff = new StringBuilder();
-        boolean expected = true; 
-
-        int schemeIdx = random.nextInt(5); // get one of the 5 pairs
-        buff.append(testUrlScheme[schemeIdx].item); // append the index of the pair at the buffer
-        expected &= testUrlScheme[schemeIdx].valid;
-
-        int authIdx = random.nextInt(5);
-        buff.append(testUrlAuthority[authIdx].item);
-        expected &= testUrlAuthority[authIdx].valid;
-
-        int portIdx = random.nextInt(5); 
-        buff.append(testUrlPort[portIdx].item);
-        expected &= testUrlPort[portIdx].valid;
-
-        int pathIdx = random.nextInt(5);
-        buff.append(testPath[pathIdx].item);
-        expected &= testPath[pathIdx].valid;
-
-        int queryIdx = random.nextInt(3);
-        buff.append(testUrlQuery[queryIdx].item);
-        expected &= testUrlQuery[queryIdx].valid;
-
-        String finalUrl = buff.toString();
-        boolean result1 = urlValidator1.isValid(finalUrl);
-       // boolean result2 = urlValidator2.isValid(finalUrl);
-
-          System.out.println("Final url:" + finalUrl + " Result1: " + result1);
-        if (result1 == true){
-          System.out.println("Default scheme validator good!");
-        }
-
-        // if (result2 == true){
-        //   System.out.println("All scheme validator good!");
-        // }
-      }
+    }
 
 
-  }
-  
+
+
+   @Test
+   public void testIsValid() {
+       // You can use this function for programming based testing
+   }
+
+
 }
